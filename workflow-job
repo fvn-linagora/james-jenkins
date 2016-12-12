@@ -5,13 +5,13 @@ import org.kohsuke.github.GitHub
 import org.kohsuke.github.GHCommitState
 import org.kohsuke.github.GHRepository
 
-// This script must be called with 
+// This script must be called with
 // $branch parameter : branch to build specified (used by git workflow-plugin command)
 // $repoURL parameter : specifies the commiter GitHub repo URL
 // $sha1 parameter : specifies the actual commit
 
-def dockerIp = '62.210.100.33'
-def continuousDeploymentDockerIp = '62.210.101.42'
+def dockerIp = '172.17.0.1' // '62.210.100.33'
+def continuousDeploymentDockerIp = '172.17.0.1' // '62.210.101.42'
 def hostname = 'james.linagora.com'
 def maxRetries = 120
 def author = extractUsername()

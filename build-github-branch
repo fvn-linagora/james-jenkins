@@ -7,7 +7,7 @@ class BranchOnRepo {
 }
 
 def branchesToBuild = [
-    new BranchOnRepo('apache/james-project', 'master')
+    new BranchOnRepo('fvn-linagora/james-jenkins', 'master')
 ]
 
 branchesToBuild.each {
