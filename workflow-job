@@ -188,7 +188,7 @@ def waitForCommandSuccess (command, maxRetries) {
 }
 
 env.DOCKER_CERT_PATH = '/keys/'
-env.DOCKER_TLS_VERIFY = 'TRUE'
+env.DOCKER_TLS_VERIFY = 'FALSE'
 
 def setDockerHost(dockerHost) {
    env.DOCKER_HOST = "tcp://${dockerHost}:2376"
@@ -252,7 +252,9 @@ flows["${sha1}"] = {
     def sha1ToBuild = sha1OrBranch()
     def integrationArguments = "${dockerIp} \$JAMES_PORT ${sha1ToBuild}"
     def verbose = "-a stdout -a stderr"
-    def dockerEnv = "--env=DOCKER_HOST=${env.DOCKER_HOST} --env=DOCKER_CERT_PATH=${env.DOCKER_CERT_PATH} --env=DOCKER_TLS_VERIFY=TRUE"
+    // def dockerEnv = "--env=DOCKER_HOST=${env.DOCKER_HOST} --env=DOCKER_CERT_PATH=${env.DOCKER_CERT_PATH} --env=DOCKER_TLS_VERIFY=TRUE"
+    def dockerEnv = "--env=DOCKER_HOST=${env.DOCKER_HOST} --env=DOCKER_CERT_PATH=${env.DOCKER_CERT_PATH} --env=DOCKER_TLS_VERIFY=FALSE"
+    // def dockerEnv = "--env=DOCKER_HOST=${env.DOCKER_HOST}"
 
     def statuses = new CommitStatuses();
     def merging = new CommitStatus(repoName, sha1, "Merging", "1");
@@ -296,9 +298,12 @@ flows["${sha1}"] = {
 
     try {
         stage "Perform Merge"
+        println("dockerEnv: ${dockerEnv}");
         node {
             git url: authorParentURL, branch: branch
-            sh "docker build --tag ${images.gitPublish} -f dockerfiles/merge/Dockerfile ."
+            sh "docker -D ps"
+            sh "docker -D images"
+            sh "docker -D build --tag ${images.gitPublish} -f dockerfiles/merge/Dockerfile ."
             sh "docker run ${verbose} -t --name ${containers.gitPublish} -v /origin ${images.gitPublish} ${sha1ToBuild} ${mergeBranch}"
             merging.success();
         }

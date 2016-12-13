@@ -37,6 +37,17 @@
   #- name: export self-signed SSL cert public key
   #  command: openssl rsa -in privateKey.key -outform PEM -pubout -out public.pem
 
+  - name: Expose docker through TCP
+    # command: sed -i 's/fd\:\/\//fd\:\/\/ -H tcp:\/\/0.0.0.0:2375/g' /etc/systemd/system/multi-user.target.wants/docker.service
+    # command: sed -i 's/fd\:\/\//fd\:\/\/ -H tcp:\/\/0.0.0.0:2375/g' /lib/systemd/system/docker.service
+    command: sed -i 's/fd\:\/\//fd\:\/\/ -H tcp:\/\/0.0.0.0:2376/g' /lib/systemd/system/docker.service
+  - name: Restart daemon
+    command: systemctl daemon-reload
+    #systemd:
+    #  state: restarted
+    #  daemon_reload: yes
+    #  name: docker
+
   - name: build jenkins HTTPS cert key docker container
     command: docker build -f DockerFileKeyContainer -t keys .
   - name: run docker container hosting jenkins cert keys

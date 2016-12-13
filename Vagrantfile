@@ -33,8 +33,8 @@ Vagrant.configure("2") do |config|
   # your network.
 #  config.vm.network "public_network"
   config.vm.network "public_network", bridge: [
-    "eth0: Tower",
-    "enp1s0: Linagolaptop",
+    "eth0",
+    "enp1s0",
   ]
 
   # Share an additional folder to the guest VM. The first argument is
